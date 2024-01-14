@@ -42,7 +42,7 @@ function App() {
     });
   }
 
-  function handleSelectedProjectDetails(id){
+  function handleSelectedProjectDetails(id) {
     setProjectState((prevState) => {
       return {
         ...prevState,
@@ -51,23 +51,47 @@ function App() {
     });
   }
 
+  function handleDeleteProject() {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter((project) => {
+          project.id !== prevState.selectedProjectId;
+        }),
+      };
+    });
+  }
 
-  console.log(projectState)
+  console.log(projectState);
 
-  const selectedProject = projectState.projects.find(project => project.id === projectState.selectedProjectId);
+  function handleAddTask(task) {
+    console.log(task)
+  }
 
-  let content = <SelectedProjectDetails project={selectedProject}/>;
+  function handleTaskDelete() {}
 
+  const selectedProject = projectState.projects.find(
+    (project) => project.id === projectState.selectedProjectId
+  );
+
+  let content = <SelectedProjectDetails onAddTask={handleAddTask} onDelete={handleDeleteProject} project={selectedProject} />;
 
   if (projectState.selectedProjectId === null) {
-    content = <NewProject onAddProject={handleAddProject} onCancel={handleAddCancel} />;
+    content = (
+      <NewProject onAddProject={handleAddProject} onCancel={handleAddCancel} />
+    );
   } else if (projectState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
   }
 
   return (
     <main className="h-screen flex gap-8">
-      <ProjectsSidebar onSelectProject={handleSelectedProjectDetails} onStartAddProject={handleStartAddProject} projects ={projectState.projects} />
+      <ProjectsSidebar
+        onSelectProject={handleSelectedProjectDetails}
+        onStartAddProject={handleStartAddProject}
+        projects={projectState.projects}
+      />
       {content}
     </main>
   );
